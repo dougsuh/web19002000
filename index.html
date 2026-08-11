@@ -42,6 +42,7 @@
 <button class="song-button" onclick="showSong(3)"><span class="num">3</span><span>누구 없소</span></button>
 <button class="song-button" onclick="showSong(4)"><span class="num">4</span><span>걱정말아요, 그대</span></button>
 <button class="song-button" onclick="showSong(5)"><span class="num">5</span><span>라라라</span></button>
+<button class="song-button" onclick="showSong(51)"><span class="num">51</span><span>옛사랑</span></button>
 <button class="song-button" onclick="showSong(6)"><span class="num">6</span><span>내가 아는 한가지</span></button>
 <button class="song-button" onclick="showSong(7)"><span class="num">7</span><span>사랑할수록</span></button>
 <button class="song-button" onclick="showSong(8)"><span class="num">8</span><span>사랑일뿐야</span></button>
@@ -469,6 +470,52 @@ And <span class="chord">C</span>all my dreams come <span class="chord">D</span>t
 
 (간주) <span class="chord">Bm</span> <span class="chord">Em</span> <span class="chord">C</span> <span class="chord">D</span> <span class="chord">G</span> <span class="chord">Bm</span> <span class="chord">Em</span> <span class="chord">C</span> <span class="chord">D</span> <span class="chord">G</span>
 (후렴) <span class="chord">Em</span> <span class="chord">C</span> <span class="chord">D</span> <span class="chord">G</span></pre>
+</section>
+</main>
+<script>
+function hideAll() {
+  document.getElementById('index-page').style.display = 'none';
+  document.querySelectorAll('.song-page').forEach(el => el.style.display = 'none');
+}
+function showIndex() {
+  hideAll();
+  document.getElementById('index-page').style.display = 'block';
+  history.replaceState(null, '', '#');
+  window.scrollTo(0,0);
+}
+function showSong(n) {
+  hideAll();
+  const page = document.getElementById('song-' + n);
+  if (page) page.style.display = 'block';
+  history.replaceState(null, '', '#song-' + n);
+  window.scrollTo(0,0);
+}
+function loadFromHash() {
+  const m = location.hash.match(/^#song-(\d+)$/);
+  if (m) showSong(m[1]); else showIndex();
+}<section class="song-page" id="song-51">
+  <div class="song-header">
+    <button class="back" onclick="showIndex()">← 목록</button>
+    <h2>51. 옛사랑 <span style="color:#888;font-size:.65em;font-weight:normal;">이문세</span></h2>
+  </div>
+  <pre class="lyrics"><span class="chord">C</span>남들도 모르<span class="chord">Em</span>게 서성<span class="chord">Am</span>이다 울었<span class="chord">E</span>지  지<span class="chord">F</span>나온 일<span class="chord">C</span>들이 가<span class="chord">Dm</span>슴에 사무쳐<span class="chord">G7</span>
+텅<span class="chord">C</span>빈 하늘<span class="chord">G</span>밑 불빛<span class="chord">Am</span>들 켜져 가<span class="chord">E</span>면 옛<span class="chord">F</span>사랑 그<span class="chord">C</span>이름 아<span class="chord">G7</span>껴 불러보<span class="chord">C</span>네
+
+찬 바람 불어와 옷깃을 여미우다 후회가 또 화가 난 눈물이 흐르네
+누가 물어도 아플 것 같지 않던 지나온 내 모습 모두 거짓인가
+
+[후렴1] 이<span class="chord">Am</span>제 <span class="chord">E</span>그리운 것<span class="chord">F</span>은 <span class="chord">E</span>그리운 대<span class="chord">F</span>로 내<span class="chord">C</span>맘에 둘 거<span class="chord">G7</span>야
+그<span class="chord">Am</span>대 생<span class="chord">E</span>각이 나<span class="chord">F</span>면 <span class="chord">E</span> 생각난 대<span class="chord">F</span>로 내<span class="chord">C</span>버려두듯<span class="chord">G7</span>이
+
+[후렴2] 흰 눈 나리면 들판에 서성이다 옛사랑 생각에 그 길 찾아가지 
+  광화문 거리 흰 눈에 덮여 가고 하얀 눈 하늘 높이 자꾸 올라가네
+
+[후렴1]
+
+사랑이란 게 지겨울 때가 있지 내 맘에 고독이 너무 흘러넘쳐
+눈 녹은 봄날 푸르른 잎새 위엔 옛사랑 그대 모습 영원 속에 있네
+
+[후렴2]</pre>
 </section>
 </main>
 <script>
