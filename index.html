@@ -471,29 +471,7 @@ And <span class="chord">C</span>all my dreams come <span class="chord">D</span>t
 (간주) <span class="chord">Bm</span> <span class="chord">Em</span> <span class="chord">C</span> <span class="chord">D</span> <span class="chord">G</span> <span class="chord">Bm</span> <span class="chord">Em</span> <span class="chord">C</span> <span class="chord">D</span> <span class="chord">G</span>
 (후렴) <span class="chord">Em</span> <span class="chord">C</span> <span class="chord">D</span> <span class="chord">G</span></pre>
 </section>
-</main>
-<script>
-function hideAll() {
-  document.getElementById('index-page').style.display = 'none';
-  document.querySelectorAll('.song-page').forEach(el => el.style.display = 'none');
-}
-function showIndex() {
-  hideAll();
-  document.getElementById('index-page').style.display = 'block';
-  history.replaceState(null, '', '#');
-  window.scrollTo(0,0);
-}
-function showSong(n) {
-  hideAll();
-  const page = document.getElementById('song-' + n);
-  if (page) page.style.display = 'block';
-  history.replaceState(null, '', '#song-' + n);
-  window.scrollTo(0,0);
-}
-function loadFromHash() {
-  const m = location.hash.match(/^#song-(\d+)$/);
-  if (m) showSong(m[1]); else showIndex();
-}<section class="song-page" id="song-51">
+  <section class="song-page" id="song-51">
   <div class="song-header">
     <button class="back" onclick="showIndex()">← 목록</button>
     <h2>51. 옛사랑 <span style="color:#888;font-size:.65em;font-weight:normal;">이문세</span></h2>
@@ -517,6 +495,29 @@ function loadFromHash() {
 
 [후렴2]</pre>
 </section>
+</main>
+<script>
+function hideAll() {
+  document.getElementById('index-page').style.display = 'none';
+  document.querySelectorAll('.song-page').forEach(el => el.style.display = 'none');
+}
+function showIndex() {
+  hideAll();
+  document.getElementById('index-page').style.display = 'block';
+  history.replaceState(null, '', '#');
+  window.scrollTo(0,0);
+}
+function showSong(n) {
+  hideAll();
+  const page = document.getElementById('song-' + n);
+  if (page) page.style.display = 'block';
+  history.replaceState(null, '', '#song-' + n);
+  window.scrollTo(0,0);
+}
+function loadFromHash() {
+  const m = location.hash.match(/^#song-(\d+)$/);
+  if (m) showSong(m[1]); else showIndex();
+}
 </main>
 <script>
 function hideAll() {
