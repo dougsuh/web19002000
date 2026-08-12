@@ -475,25 +475,157 @@ function hideAll() {
   document.getElementById('index-page').style.display = 'none';
   document.querySelectorAll('.song-page').forEach(el => el.style.display = 'none');
 }
+
 function showIndex() {
   hideAll();
   document.getElementById('index-page').style.display = 'block';
   history.replaceState(null, '', '#');
   window.scrollTo(0,0);
 }
+
+function getSongPages() {
+  // NodeList to Array in DOM order
+  return Array.from(document.querySelectorAll('.song-page'));
+}
+
+function pageIndexFromIdOrHash(n) {
+  const id = 'song-' + n;
+  const pages = getSongPages();
+  return pages.findIndex(p => p.id === id);
+}
+
+function getCurrentSongIndex() {
+  const pages = getSongPages();
+  // prefer a visible .song-page
+  const visibleIndex = pages.findIndex(p => p.style.display !== 'none');
+  if (visibleIndex !== -1) return visibleIndex;
+  // otherwise infer from hash
+  const m = location.hash.match(/^#song-(\d+)$/);
+  if (m) {
+    return pages.findIndex(p => p.id === 'song-' + m[1]);
+  }
+  return -1;
+}
+
 function showSong(n) {
   hideAll();
   const page = document.getElementById('song-' + n);
-  if (page) page.style.display = 'block';
+  if (!page) {
+    // if no matching song, go to index
+    showIndex();
+    return;
+  }
+  page.style.display = 'block';
   history.replaceState(null, '', '#song-' + n);
   window.scrollTo(0,0);
+  // ensure prev/next controls exist and are updated
+  ensureNavControls(page);
 }
+
+function ensureNavControls(page) {
+  // add navigation controls (Prev / Next) once per page
+  if (!page) return;
+  let controls = page.querySelector('.nav-controls');
+  if (!controls) {
+    controls = document.createElement('div');
+    controls.className = 'nav-controls';
+    controls.style.display = 'inline-flex';
+    controls.style.gap = '8px';
+    controls.style.marginLeft = '12px';
+    controls.style.alignItems = 'center';
+
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = '← 이전';
+    prevBtn.className = 'back';
+    prevBtn.type = 'button';
+    prevBtn.style.padding = '8px 10px';
+    prevBtn.addEventListener('click', showPrev);
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '다음 →';
+    nextBtn.className = 'back';
+    nextBtn.type = 'button';
+    nextBtn.style.padding = '8px 10px';
+    nextBtn.addEventListener('click', showNext);
+
+    controls.appendChild(prevBtn);
+    controls.appendChild(nextBtn);
+
+    // insert controls after the existing back button so layout stays consistent
+    const header = page.querySelector('.song-header');
+    if (header) {
+      // place controls right after the back button (if present) else at start
+      const backBtn = header.querySelector('.back');
+      if (backBtn && backBtn.parentNode) {
+        backBtn.parentNode.insertBefore(controls, backBtn.nextSibling);
+      } else {
+        header.insertBefore(controls, header.firstChild);
+      }
+    } else {
+      page.insertBefore(controls, page.firstChild);
+    }
+  }
+  // enable/disable prev/next based on position
+  const pages = getSongPages();
+  const idx = pages.indexOf(page);
+  const btns = controls.querySelectorAll('button');
+  const prev = btns[0], next = btns[1];
+  if (idx <= 0) {
+    prev.disabled = true;
+    prev.style.opacity = '0.6';
+    prev.style.cursor = 'default';
+  } else {
+    prev.disabled = false;
+    prev.style.opacity = '';
+    prev.style.cursor = '';
+  }
+  if (idx === -1 || idx >= pages.length - 1) {
+    next.disabled = true;
+    next.style.opacity = '0.6';
+    next.style.cursor = 'default';
+  } else {
+    next.disabled = false;
+    next.style.opacity = '';
+    next.style.cursor = '';
+  }
+}
+
+function showPrev() {
+  const pages = getSongPages();
+  const idx = getCurrentSongIndex();
+  if (idx > 0) {
+    const prevId = pages[idx - 1].id;
+    const num = prevId.split('-')[1];
+    showSong(num);
+  } // else do nothing (disabled)
+}
+
+function showNext() {
+  const pages = getSongPages();
+  const idx = getCurrentSongIndex();
+  if (idx !== -1 && idx < pages.length - 1) {
+    const nextId = pages[idx + 1].id;
+    const num = nextId.split('-')[1];
+    showSong(num);
+  } // else do nothing (disabled)
+}
+
 function loadFromHash() {
   const m = location.hash.match(/^#song-(\d+)$/);
-  if (m) showSong(m[1]); else showIndex();
+  if (m) {
+    showSong(m[1]);
+  } else {
+    showIndex();
+  }
 }
+
+// initialize nav controls for any pre-visible song (if opening with hash)
 window.addEventListener('hashchange', loadFromHash);
-loadFromHash();
+window.addEventListener('DOMContentLoaded', () => {
+  // Create nav controls for all pages so they exist immediately
+  getSongPages().forEach(p => ensureNavControls(p));
+  loadFromHash();
+});
 </script>
 </body>
 </html>
